@@ -22,6 +22,12 @@ public class Components {
         this.otpWaitTime = value;
     }
 
+    private static String otpMaxRetry;
+    @Value("${bot.retry.otp}")
+    private void setOtpMaxRetry(String value) {
+        this.otpMaxRetry = value;
+    }
+
     @Autowired
     public Components() {
 
@@ -34,6 +40,11 @@ public class Components {
     public static String getOtpWaitTime(){
         return otpWaitTime;
     }
+
+    public static String getOtpMaxRetry() {
+        return otpMaxRetry;
+    }
+
 
     public static Map<String, String> getDenominations() {
         return getDenominationsIdMap();

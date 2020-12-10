@@ -67,6 +67,7 @@ public class TransactionController {
         String message="";
 
         if (!areTrxIdAndPlayerIdValid()) {
+            updateMessage();
             message =  MSG_ERROR_TRX_PLAYER_ID;
         } else {
             if (isTrxIdAlreadyExists())
@@ -81,6 +82,9 @@ public class TransactionController {
         }
 
         return new RequestValidity(status, message);
+    }
+
+    private void updateMessage() {
     }
 
     private void initResponsePojo() {
