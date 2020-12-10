@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="bot.playgo.Model.InboxMsSql" table="inbox" schema="dbo" catalog="otomax">
+        <id name="kode">
+            <column name="kode" sql-type="int"/>
+        </id>
+        <property name="tglEntri">
+            <column name="tgl_entri" sql-type="datetime"/>
+        </property>
+        <property name="penerima">
+            <column name="penerima" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <property name="pengirim">
+            <column name="pengirim" sql-type="varchar(255)"/>
+        </property>
+        <property name="tipePengirim">
+            <column name="tipe_pengirim" sql-type="char(1)" length="1"/>
+        </property>
+        <property name="pesan">
+            <column name="pesan" sql-type="varchar(4000)" length="4000"/>
+        </property>
+        <property name="status">
+            <column name="status" sql-type="tinyint"/>
+        </property>
+        <property name="kodeTerminal">
+            <column name="kode_terminal" sql-type="int" not-null="true"/>
+        </property>
+        <property name="tglStatus">
+            <column name="tgl_status" sql-type="datetime" not-null="true"/>
+        </property>
+        <property name="kodeReseller">
+            <column name="kode_reseller" sql-type="varchar(20)" length="20" not-null="true"/>
+        </property>
+        <property name="kodeTransaksi">
+            <column name="kode_transaksi" sql-type="int" not-null="true"/>
+        </property>
+        <property name="isJawaban">
+            <column name="is_jawaban" sql-type="tinyint"/>
+        </property>
+        <property name="serviceCenter">
+            <column name="service_center" sql-type="varchar(100)" length="100" not-null="true"/>
+        </property>
+        <property name="isCs">
+            <column name="is_cs" sql-type="tinyint" not-null="true"/>
+        </property>
+        <property name="kodeJawabanCs">
+            <column name="kode_jawaban_cs" sql-type="int" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>
