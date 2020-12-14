@@ -23,6 +23,7 @@ public class PlayGo {
     private static String msisdn = Components.getMsisdn();
     private static String otpWaitTime = Components.getOtpWaitTime();
     private static String otpMaxRetry = Components.getOtpMaxRetry();
+    private static String terminalId = Components.getTerminalId();
 
     private final OkHttpClient client = getHttpClient();
     private boolean status;
@@ -42,6 +43,7 @@ public class PlayGo {
     private static final String RESULT_CODE_PIN_GENERATED = "PIN_GENERATED";
     private static final String RESULT_CODE_PIN_INVALID = "INVALID_PIN";
     private static final String RESULT_CODE_PIN_BLOCKED = "BLOCKED_PIN";
+    private static final String RESULT_CODE_NO_OTP = "NOT RECEIVE OTP";
     private static final String RESULT_CODE_SUCCESS = "SUCCESS";
     private static final String RESULT_CODE_INVALID_PLAYER = "PLAYER NOT FOUND";
     private static final String RESULT_CODE_PHONE_NUMBER_NOT_XL = "CHECK XL NUMBER";
@@ -53,6 +55,7 @@ public class PlayGo {
 
     private final String KEY_VALIDATION_TOKEN = "validationToken";
 
+    private String previousOTP;
     private String OTP;
 
     private final Map<Boolean, String> transactionStatus = new HashMap<>();
@@ -87,6 +90,9 @@ public class PlayGo {
     private void processTransaction() throws Exception {
         processValidate();
         processNormalize();
+
+        initiatePreviousOTP();
+
         processCreate();
 
         waitForOtp();
@@ -95,6 +101,10 @@ public class PlayGo {
         getOtpAndProcessTopUp();
 
         retryTopUpForBlockedOrInvalidPin();
+    }
+
+    private void initiatePreviousOTP() {
+        previousOTP  = DBUtilOtp.getOTP(terminalId);
     }
 
     private void retryTopUpForBlockedOrInvalidPin() throws Exception {
@@ -208,6 +218,8 @@ public class PlayGo {
                     updateMessage(getTopUpResponseMessage());
                     if (status) {
                         updateMessage(message + " - " + validateResponse.getUsername());
+                    }else{
+                        updateMessage(RESULT_CODE_NO_OTP);
                     }
                 }
             }
@@ -234,7 +246,7 @@ public class PlayGo {
 
     private void processOTP() throws Exception {
         if (isOTPGenerated()) {
-            OTP = DBUtilOtp.getOTP();
+            OTP = DBUtilOtp.getOTP(terminalId);
         }
     }
 

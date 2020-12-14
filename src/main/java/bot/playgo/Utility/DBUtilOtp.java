@@ -14,20 +14,21 @@ public class DBUtilOtp {
 
     private static final SessionFactory factory = new Configuration().configure("hibernate-sql.cfg.xml").buildSessionFactory();
 
-    public static String getOTP() {
+    public static String getOTP(String kode_terminal) {
         Session session = factory.openSession();
         String result = "";
 
         try {
             Query query = session.
-                    createSQLQuery("select pesan from dbo.inbox where pesan like '%Kode anda%' order by tgl_entri desc");
+                    createSQLQuery("select pesan from dbo.inbox where pesan like '%Kode anda%' and kode_terminal=:kode_terminal order by tgl_entri desc");
+            query.setParameter("kode_terminal",kode_terminal);
             query.setMaxResults(1);
 
             List results = query.getResultList();
             result = get4DigitsNumericFromMessage(results.get(0).toString());
             PlaygoApplication.logger.info("Generated OTP : "+result);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             PlaygoApplication.logger.info(e.getMessage());
         } finally {
             session.close();

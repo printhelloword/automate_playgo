@@ -16,6 +16,12 @@ public class Components {
         this.msisdn = value;
     }
 
+    private static String terminalId;
+    @Value("${bot.terminal.id}")
+    private void setTerminalId(String value) {
+        this.terminalId = value;
+    }
+
     private static String otpWaitTime;
     @Value("${bot.wait.otp}")
     private void setOtpWaitTime(String value) {
@@ -23,6 +29,8 @@ public class Components {
     }
 
     private static String otpMaxRetry;
+
+
     @Value("${bot.retry.otp}")
     private void setOtpMaxRetry(String value) {
         this.otpMaxRetry = value;
@@ -35,6 +43,10 @@ public class Components {
 
     public static String getMsisdn() {
         return msisdn;
+    }
+
+    public static String getTerminalId() {
+        return terminalId;
     }
 
     public static String getOtpWaitTime(){
