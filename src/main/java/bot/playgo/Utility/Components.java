@@ -4,11 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 public class Components {
+
+    public static Date formattedRequestTimestamp;
+    public static final String dateFormatPattern = "yyyy-MM-dd hh:mm:ss";
+    public static final String stringFalse = "-1";
 
     private static String msisdn;
     @Value("${bot.msisdn}")
@@ -29,8 +34,6 @@ public class Components {
     }
 
     private static String otpMaxRetry;
-
-
     @Value("${bot.retry.otp}")
     private void setOtpMaxRetry(String value) {
         this.otpMaxRetry = value;
@@ -56,7 +59,6 @@ public class Components {
     public static String getOtpMaxRetry() {
         return otpMaxRetry;
     }
-
 
     public static Map<String, String> getDenominations() {
         return getDenominationsIdMap();
@@ -92,7 +94,7 @@ public class Components {
         subDenominationsMap.put("721", "24");
         subDenominationsMap.put("722", "25");
         subDenominationsMap.put("723", "26");
-        subDenominationsMap.put("7248", "26");
+        subDenominationsMap.put("724", "26");
 
         return subDenominationsMap;
     }

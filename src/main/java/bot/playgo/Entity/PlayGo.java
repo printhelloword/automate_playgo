@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class PlayGo {
 
+    public static final String NOT_RECEIVED_OTP = "NOT RECEIVED OTP";
     private static String msisdn = Components.getMsisdn();
     private static String otpWaitTime = Components.getOtpWaitTime();
     private static String otpMaxRetry = Components.getOtpMaxRetry();
@@ -55,13 +56,13 @@ public class PlayGo {
 
     private final String KEY_VALIDATION_TOKEN = "validationToken";
 
-    private String previousOTP;
-    private String OTP;
+    //    private String previousOTP;
+    private String OTP = Components.stringFalse;
 
     private final Map<Boolean, String> transactionStatus = new HashMap<>();
 
     private static Voucher voucher;
-    String message = "";
+    String message = "GENERAL ERROR";
     private ValidateResponse validateResponse;
     private NormalizeResponse normalizeResponse;
     private CreateResponse createResponse;
@@ -91,36 +92,41 @@ public class PlayGo {
         processValidate();
         processNormalize();
 
-        initiatePreviousOTP();
+//        initiatePreviousOTP();
 
         processCreate();
 
-        waitForOtp();
-        //wait for interval of time for updated OTP
+        waitForOtp(); //wait for interval of time for updated OTP
 
         getOtpAndProcessTopUp();
 
         retryTopUpForBlockedOrInvalidPin();
     }
 
-    private void initiatePreviousOTP() {
-        previousOTP  = DBUtilOtp.getOTP(terminalId);
-    }
+    /*private void initiatePreviousOTP() {
+        previousOTP = DBUtilOtp.getOTP(terminalId);
+    }*/
 
     private void retryTopUpForBlockedOrInvalidPin() throws Exception {
         for (int i = 0; i < Integer.parseInt(otpMaxRetry); i++) {
             if (isTopUpSucced())
                 break;
             else if (isPinInvalid()) {
+                PlaygoApplication.logger.info("Initializing Retry");
                 waitForOtp();
-                PlaygoApplication.logger.info("Retry OTP. Count=" + (i + 1)+"x");
+                PlaygoApplication.logger.info("Retry OTP. Count=" + (i + 1) + "x");
                 getOtpAndProcessTopUp();
+
             }
+            if (OTP.equalsIgnoreCase(Components.stringFalse))
+                message = NOT_RECEIVED_OTP;
         }
     }
 
     private boolean isPinInvalid() throws Exception {
-        return topUpResponse.getResultCode().equalsIgnoreCase(RESULT_CODE_PIN_INVALID) || topUpResponse.getResultCode().equalsIgnoreCase(RESULT_CODE_PIN_BLOCKED);
+        if (OTP.equalsIgnoreCase(Components.stringFalse))
+            PlaygoApplication.logger.info(NOT_RECEIVED_OTP);
+        return OTP.equalsIgnoreCase(Components.stringFalse) || topUpResponse.getResultCode().equalsIgnoreCase(RESULT_CODE_PIN_INVALID) || topUpResponse.getResultCode().equalsIgnoreCase(RESULT_CODE_PIN_BLOCKED);
     }
 
     private void waitForOtp() throws Exception {
@@ -182,15 +188,17 @@ public class PlayGo {
 
     private CreateRequest getCreateRequestObject() throws Exception {
         CreateRequest createRequest = CreateRequest.withoutBonus(DEFAULT_PRODUCT_ID_FREE_FIRE, msisdn, voucher.getDenomId(), validateResponse.getValidationToken());
-        if (voucher.getDenomBonusId() != null)
-            createRequest.setBonusId(voucher.getDenomBonusId());
+        // ADD BONUS
+        /*if (voucher.getDenomBonusId() != null)
+            createRequest.setBonusId(voucher.getDenomBonusId());*/
         return createRequest;
     }
 
     private TopUpRequest getTopUpRequestObject() throws Exception {
         TopUpRequest topUpRequest = TopUpRequest.withoutBonus(validateResponse.getValidationToken(), DEFAULT_PRODUCT_ID_FREE_FIRE, OTP, voucher.getDenomId(), msisdn);
-        if (voucher.getDenomBonusId() != null)
-            topUpRequest.setBonusId(voucher.getDenomBonusId());
+        // ADD BONUS
+        /*if (voucher.getDenomBonusId() != null)
+            topUpRequest.setBonusId(voucher.getDenomBonusId());*/
         return topUpRequest;
     }
 
@@ -218,7 +226,7 @@ public class PlayGo {
                     updateMessage(getTopUpResponseMessage());
                     if (status) {
                         updateMessage(message + " - " + validateResponse.getUsername());
-                    }else{
+                    } else {
                         updateMessage(RESULT_CODE_NO_OTP);
                     }
                 }
@@ -241,7 +249,7 @@ public class PlayGo {
     }
 
     private boolean isTopUpSucced() {
-        return (topUpResponse.getResultCode().equalsIgnoreCase(RESULT_CODE_SUCCESS));
+        return topUpResponse != null && topUpResponse.getResultCode().equalsIgnoreCase(RESULT_CODE_SUCCESS);
     }
 
     private void processOTP() throws Exception {
@@ -296,7 +304,9 @@ public class PlayGo {
 
     private void getOtpAndProcessTopUp() throws Exception {
         processOTP();
-        processTopUp();
+        if (!OTP.equals(Components.stringFalse))
+            processTopUp();
+
     }
 
 
