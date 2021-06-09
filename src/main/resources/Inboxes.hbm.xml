@@ -4,7 +4,7 @@
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
-    <class name="bot.playgo.Model.Inbox" table="inboxes" schema="bot_playgo">
+    <class name="bot.higgs.Model.Inbox" table="inboxes" schema="bot_playgo_aov">
         <id name="id">
             <column name="id" sql-type="int(11)"/>
         </id>

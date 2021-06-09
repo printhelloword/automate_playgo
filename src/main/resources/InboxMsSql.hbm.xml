@@ -4,7 +4,7 @@
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
-    <class name="bot.playgo.Model.InboxMsSql" table="inbox" schema="dbo" catalog="otomax">
+    <class name="bot.higgs.Model.InboxMsSql" table="inbox" schema="dbo" catalog="otomax">
         <id name="kode">
             <column name="kode" sql-type="int"/>
         </id>

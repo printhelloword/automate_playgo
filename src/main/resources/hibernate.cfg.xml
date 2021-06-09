@@ -5,16 +5,16 @@
 <hibernate-configuration>
   <session-factory>
 
-    <property name="connection.url">jdbc:mysql://localhost:3306/bot_playgo?zeroDateTimeBehavior=convertToNull&amp;serverTimezone=UTC</property>
+    <property name="connection.url">jdbc:mysql://localhost:3306/bot_playgo_aov?zeroDateTimeBehavior=convertToNull&amp;serverTimezone=UTC</property>
     <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 
     <property name="connection.username">root</property>
 
     <mapping resource="Inboxes.hbm.xml"/>
-    <mapping class="bot.playgo.Model.Inbox"/>
+    <mapping class="bot.higgs.Model.Inbox"/>
     <mapping resource="Outboxes.hbm.xml"/>
-    <mapping class="bot.playgo.Model.Outbox"/>
+    <mapping class="bot.higgs.Model.Outbox"/>
 
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
