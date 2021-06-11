@@ -5,10 +5,13 @@
 <hibernate-configuration>
   <session-factory>
     <property name="dialect">org.hibernate.dialect.SQLServerDialect</property>
-    <property name="connection.url">jdbc:sqlserver://192.168.99.9\sqlexpress:1433;database=otomax</property>
+    <property name="connection.url">jdbc:sqlserver://localhost\sqlexpress:1433;database=otomax</property>
     <property name="connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
     <property name="connection.username">sa</property>
-    <property name="connection.password">admin.1</property>
+    <property name="connection.password">Delta*0000</property>
+
+<!--    <property name="connection.url">jdbc:sqlserver://127.0.0.1:1433;database=otomax</property>-->
+<!--    <property name="connection.password">pelangi.1</property>-->
 
     <mapping resource="InboxMsSql.hbm.xml"/>
     <mapping class="bot.playgo.Model.InboxMsSql"/>

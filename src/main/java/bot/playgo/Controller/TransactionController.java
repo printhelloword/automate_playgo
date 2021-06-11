@@ -3,7 +3,7 @@ package bot.playgo.Controller;
 import bot.playgo.Entity.*;
 import bot.playgo.Model.Inbox;
 import bot.playgo.Model.Outbox;
-import bot.playgo.PlaygoApplication;
+import bot.playgo.MlbbApplication;
 import bot.playgo.Pojo.ResponsePojo;
 import bot.playgo.Pojo.VoucherPojo;
 import bot.playgo.Utility.Components;
@@ -67,6 +67,7 @@ public class TransactionController {
         String message="";
 
         if (!areTrxIdAndPlayerIdValid()) {
+            updateMessage();
             message =  MSG_ERROR_TRX_PLAYER_ID;
         } else {
             if (isTrxIdAlreadyExists())
@@ -81,6 +82,9 @@ public class TransactionController {
         }
 
         return new RequestValidity(status, message);
+    }
+
+    private void updateMessage() {
     }
 
     private void initResponsePojo() {
@@ -98,9 +102,9 @@ public class TransactionController {
     private void checkInboxisSavedAndStartTransaction() {
         if (isSaveToInboxSucceed()) {
             Voucher voucher = createNewVoucher();
-            PlayGo playGo = PlayGo.ofVoucher(voucher);
+            Mlbb mlbb = Mlbb.ofVoucher(voucher);
 
-            Map<Boolean, String> transactionResult = playGo.processTopTupAndGetMessage();
+            Map<Boolean, String> transactionResult = mlbb.processTopTupAndGetMessage();
 
             if (transactionResult != null) {
                 responsePojo.setVoucher(voucherPojo);
@@ -120,8 +124,8 @@ public class TransactionController {
     }
 
     private void printResponseJsonAndSaveToOutbox(JSONObject jsonObject) {
-        PlaygoApplication.logger.info("Returning JSON : ");
-        PlaygoApplication.logger.info(jsonObject.toString(4));
+        MlbbApplication.logger.info("Returning JSON : ");
+        MlbbApplication.logger.info(jsonObject.toString(4));
         if (inboxId != null)
             saveToOutbox(createNewBoutbox());
     }
@@ -139,8 +143,8 @@ public class TransactionController {
         try {
             DBUtilOutboxes.saveOutbox(newBoutbox);
         } catch (Exception e) {
-            PlaygoApplication.logger.info(e.getMessage());
-            PlaygoApplication.logger.info("Failed Save To Outbox");
+            MlbbApplication.logger.info(e.getMessage());
+            MlbbApplication.logger.info("Failed Save To Outbox");
         }
     }
 
@@ -148,8 +152,8 @@ public class TransactionController {
         try {
             inboxId = DBUtilInboxes.saveInbox(newInbox);
         } catch (Exception e) {
-            PlaygoApplication.logger.info(e.getMessage());
-            PlaygoApplication.logger.info("Failed Save To DB");
+            MlbbApplication.logger.info(e.getMessage());
+            MlbbApplication.logger.info("Failed Save To DB");
         }
     }
 

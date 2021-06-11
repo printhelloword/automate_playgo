@@ -1,6 +1,6 @@
 package bot.playgo.Utility;
 
-import bot.playgo.PlaygoApplication;
+import bot.playgo.MlbbApplication;
 
 public class InputValidator {
 
@@ -10,7 +10,7 @@ public class InputValidator {
             Long.parseLong(input);
             status = true;
         } catch (Exception e) {
-            PlaygoApplication.logger.info("Input Not Numeric");
+            MlbbApplication.logger.info("Input Not Numeric");
         }
         return status;
     }

@@ -1,7 +1,7 @@
 package bot.playgo.Utility;
 
 import bot.playgo.Model.Inbox;
-import bot.playgo.PlaygoApplication;
+import bot.playgo.MlbbApplication;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -50,7 +50,7 @@ public class DBUtilInboxes {
             }
         }
         catch(Exception e) {
-            PlaygoApplication.logger.info(e.getMessage());
+            MlbbApplication.logger.info(e.getMessage());
         }
         finally {
             session.close();

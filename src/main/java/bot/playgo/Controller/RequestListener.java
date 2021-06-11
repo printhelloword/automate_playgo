@@ -1,14 +1,17 @@
 package bot.playgo.Controller;
 
 import bot.playgo.Entity.Request;
-import bot.playgo.PlaygoApplication;
-import bot.playgo.Pojo.Response.ValidateResponse;
+import bot.playgo.MlbbApplication;
 import bot.playgo.Pojo.ResponsePojo;
-import com.google.gson.Gson;
+import bot.playgo.Utility.Components;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @RestController
 public class RequestListener {
@@ -17,18 +20,29 @@ public class RequestListener {
     private String processRequest(
             @PathVariable String playerId,
             @PathVariable String denom,
-            @PathVariable String trxId)
-    {
+            @PathVariable String trxId) {
+
         Request request = Request.ofParams(playerId, denom, trxId);
+
         printRequest(request);
+        setRequestTimestamp();
 
         TransactionController transactionController = TransactionController.ofRequest(request);
         ResponsePojo transactionResult = transactionController.getResponsePojo();
         return new JSONObject(transactionResult).toString();
     }
 
+    private void setRequestTimestamp() {
+        try {
+            Components.formattedRequestTimestamp = new SimpleDateFormat(Components.dateFormatPattern).parse(new Timestamp(new Date().getTime()).toString());
+            MlbbApplication.logger.info("Set Timestamp -> " +Components.formattedRequestTimestamp);
+        } catch (Exception e) {
+            MlbbApplication.logger.info(e.getMessage());
+        }
+    }
+
     private void printRequest(Request request) {
-        PlaygoApplication.logger.info("======Incoming Request===== trx/"+request.mergedRequestSeparatedBySlash()+"/");
+        MlbbApplication.logger.info("====== Incoming Request ===== trx/" + request.mergedRequestSeparatedBySlash() + "/");
     }
 
 }

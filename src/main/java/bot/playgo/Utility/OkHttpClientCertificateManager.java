@@ -1,7 +1,7 @@
 package bot.playgo.Utility;
 
 
-import bot.playgo.PlaygoApplication;
+import bot.playgo.MlbbApplication;
 import okhttp3.OkHttpClient;
 
 import javax.net.ssl.*;
@@ -45,10 +45,10 @@ public class OkHttpClientCertificateManager {
             });
 
             OkHttpClient okHttpClient = builder.build();
-            PlaygoApplication.logger.info("INIT OKHTTP IGNORE CERTIFICATE");
+            MlbbApplication.logger.info("INIT OKHTTP IGNORE CERTIFICATE");
             return okHttpClient;
         } catch (Exception e) {
-            PlaygoApplication.logger.info(e.getMessage());
+            MlbbApplication.logger.info(e.getMessage());
             throw new RuntimeException(e);
         }
     }
